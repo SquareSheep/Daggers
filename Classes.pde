@@ -303,7 +303,7 @@ class IColor extends AColor {
     super(rc, gc, bc, ac);
     this.rm = rm; this.gm = gm; this.bm = bm; this.am = am;
     this.rc = (int)rc; this.gc = (int)gc; this.bc = (int)bc; this.ac = (int)ac;
-    this.index = (int)index;
+    this.index = (int)index%binCount;
   }
 
   IColor(float rc, float gc, float bc, float ac) {
@@ -364,7 +364,7 @@ class IColor extends AColor {
 
   void setM(float r, float g, float b, float a, float i) {
     this.setM(r,g,b,a);
-    this.index = (int)i;
+    this.index = (int)i%binCount;
   }
 
   void setC(float rc, float gc, float bc, float ac) {
@@ -377,7 +377,7 @@ class IColor extends AColor {
   void set(float rc, float gc, float bc, float ac, float rm, float gm, float bm, float am, float index) {
     setC(rc,gc,bc,ac);
     setM(rm,gm,bm,am);
-    this.index = (int)index;
+    this.index = (int)index%binCount;
   }
 
   void set(float rc, float gc, float bc, float ac, float rm, float gm, float bm, float am) {
@@ -386,6 +386,11 @@ class IColor extends AColor {
 
   void reset(float rc, float gc, float bc, float ac, float rm, float gm, float bm, float am, float index) {
     set(rc,gc,bc,ac,rm,gm,bm,am,index);
+    r.x = rc; g.x = gc; b.x = bc; a.x = ac;
+  }
+
+  void reset(float rc, float gc, float bc, float ac) {
+    setC(rc,gc,bc,ac);
     r.x = rc; g.x = gc; b.x = bc; a.x = ac;
   }
 
