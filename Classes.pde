@@ -501,6 +501,7 @@ class BeatTimer {
 
 class Camera {
   Point p;
+  Point pv = new Point();
   Point ang;
   Point av = new Point();
   PVector dp;
@@ -520,15 +521,23 @@ class Camera {
   Camera(float x, float y, float z) {
     this(x,y,z,0,0,0);
   }
+  void reset() {
+    p.P.set(dp);
+    pv.reset(0,0,0);
+    ang.P.set(dang);
+    av.reset(0,0,0);
+  }
 
   void update() {
   if (!lock) {
-    cam.ang.P.y = (float)mouseX/width*2*PI - PI;
-    cam.ang.P.x = -(float)mouseY/height*2*PI - PI;
+    ang.P.y = (float)mouseX/width*2*PI - PI;
+    ang.P.x = -(float)mouseY/height*2*PI - PI;
   } else {
-    cam.ang.P.add(av.p);
+    ang.P.add(av.p);
+    p.P.add(pv.p);
   }
     p.update();
+    pv.update();
     ang.P.add(av.p);
     ang.update();
     av.update();

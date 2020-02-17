@@ -1,3 +1,5 @@
+float bladeHiltZ = 0.4;
+float bladeHiltW = 0.65;
 class Blade extends Mob {
 	Point w;
 	Point rangV = new Point();
@@ -26,62 +28,6 @@ class Blade extends Mob {
 		rv.update();
 		rangV.update();
 		fillStyle.update();
-	}
-
-	void render() {
-		setDraw();
-		fill(255);
-		fillStyle.fillStyle();
-		beginShape();
-		vertex(0,0,0);
-		vertex(-w.p.x,0,w.p.z*0.5);
-		vertex(0,w.p.y,w.p.z*0.5);
-		vertex(0,0,0);
-		endShape();
-		beginShape();
-		vertex(0,0,0);
-		vertex(w.p.x,0,w.p.z*0.5);
-		vertex(0,w.p.y,w.p.z*0.5);
-		vertex(0,0,0);
-		endShape();
-		beginShape();
-		vertex(0,0,w.p.z);
-		vertex(-w.p.x,0,w.p.z*0.5);
-		vertex(0,w.p.y,w.p.z*0.5);
-		vertex(0,0,w.p.z);
-		endShape();
-		beginShape();
-		vertex(0,0,w.p.z);
-		vertex(w.p.x,0,w.p.z*0.5);
-		vertex(0,w.p.y,w.p.z*0.5);
-		vertex(0,0,w.p.z);
-		endShape();
-
-		beginShape();
-		vertex(0,0,0);
-		vertex(-w.p.x,0,w.p.z*0.5);
-		vertex(0,-w.p.y,w.p.z*0.5);
-		vertex(0,0,0);
-		endShape();
-		beginShape();
-		vertex(0,0,0);
-		vertex(w.p.x,0,w.p.z*0.5);
-		vertex(0,-w.p.y,w.p.z*0.5);
-		vertex(0,0,0);
-		endShape();
-		beginShape();
-		vertex(0,0,w.p.z);
-		vertex(-w.p.x,0,w.p.z*0.5);
-		vertex(0,-w.p.y,w.p.z*0.5);
-		vertex(0,0,w.p.z);
-		endShape();
-		beginShape();
-		vertex(0,0,w.p.z);
-		vertex(w.p.x,0,w.p.z*0.5);
-		vertex(0,-w.p.y,w.p.z*0.5);
-		vertex(0,0,w.p.z);
-		endShape();
-		pop();
 	}
 
 	void stab(float x, float y, float z, float ang1, float ang2, float d) {
@@ -144,11 +90,67 @@ class Blade extends Mob {
 		rangV.P.set(vx,vy,vz);
 	}
 
-	void setWP(float w) {
+	void setW(float w) {
 		this.w.P.set(w*0.2,w*0.1,w);
 	}
 
 	void resetW(float w) {
 		this.w.reset(w*0.2,w*0.1,w);
+	}
+
+	void render() {
+		setDraw();
+		fill(255);
+		fillStyle.fillStyle();
+		beginShape();
+		vertex(0,0,0);
+		vertex(-w.p.x*bladeHiltW,0,w.p.z*bladeHiltZ);
+		vertex(0,w.p.y*bladeHiltW,w.p.z*bladeHiltZ);
+		vertex(0,0,0);
+		endShape();
+		beginShape();
+		vertex(0,0,0);
+		vertex(w.p.x*bladeHiltW,0,w.p.z*bladeHiltZ);
+		vertex(0,w.p.y*bladeHiltW,w.p.z*bladeHiltZ);
+		vertex(0,0,0);
+		endShape();
+		beginShape();
+		vertex(0,0,w.p.z);
+		vertex(-w.p.x,0,w.p.z*bladeHiltZ);
+		vertex(0,w.p.y,w.p.z*bladeHiltZ);
+		vertex(0,0,w.p.z);
+		endShape();
+		beginShape();
+		vertex(0,0,w.p.z);
+		vertex(w.p.x,0,w.p.z*bladeHiltZ);
+		vertex(0,w.p.y,w.p.z*bladeHiltZ);
+		vertex(0,0,w.p.z);
+		endShape();
+
+		beginShape();
+		vertex(0,0,0);
+		vertex(-w.p.x*bladeHiltW,0,w.p.z*bladeHiltZ);
+		vertex(0,-w.p.y*bladeHiltW,w.p.z*bladeHiltZ);
+		vertex(0,0,0);
+		endShape();
+		beginShape();
+		vertex(0,0,0);
+		vertex(w.p.x*bladeHiltW,0,w.p.z*bladeHiltZ);
+		vertex(0,-w.p.y*bladeHiltW,w.p.z*bladeHiltZ);
+		vertex(0,0,0);
+		endShape();
+		beginShape();
+		vertex(0,0,w.p.z);
+		vertex(-w.p.x,0,w.p.z*bladeHiltZ);
+		vertex(0,-w.p.y,w.p.z*bladeHiltZ);
+		vertex(0,0,w.p.z);
+		endShape();
+		beginShape();
+		vertex(0,0,w.p.z);
+		vertex(w.p.x,0,w.p.z*bladeHiltZ);
+		vertex(0,-w.p.y,w.p.z*bladeHiltZ);
+		vertex(0,0,w.p.z);
+		endShape();
+		pop();
 	}
 }

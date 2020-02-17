@@ -1,34 +1,68 @@
-Blade[] subAr(int start, int num) {
-	Blade[] list = new Blade[num];
-	for (int i = 0 ; i < num ; i ++) {
-		list[i] = ar[i+start];
-	}
-	return list;
-}
-
-void bladeRing(float x, float y, float z, float ax, float ay, float az, float w, float d, int start, int num) {
-	float k = 0;
-	for (int i = start ; i < start + num ; i ++) {
-		ar[i].p.P.set(x,y,z);
-		ar[i].r.P.set(0,0,d);
-		ar[i].rang.P.set(ax,ay+k/num*2*PI,az);
-		ar[i].setWP(w);
-		k ++;
-
-		ar[i].rv.P.set(0,0,random(-6,6));
+void setAng(float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].ang.P.set(x,y,z);
 	}
 }
 
-void bladeSpray(float x, float y, float z, float ax, float ay, float az, float w, float d, float spread, int start, int num) {
-	float k = 0;
-	for (int i = start ; i < start + num ; i ++) {
-		ar[i].p.P.set(x,y,z);
-		ar[i].r.P.set(0,0,random(d));
-		ar[i].rang.P.set(ax+PI/2+random(-spread,spread),ay+random(-spread,spread),az+random(-PI,PI));
-		ar[i].setWP(w);
-		k ++;
+void setAV(float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].av.P.set(x,y,z);
+	}
+}
 
-		ar[i].rv.P.set(0,0,random(-6,6));
+void setRang(float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].rang.P.set(x,y,z);
+	}
+}
+
+void setRangV(float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].rangV.P.set(x,y,z);
+	}
+}
+
+void setR(float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].r.P.set(x*wx,y*wy,z*wz);
+	}
+}
+
+void setRv(float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].rv.P.set(x*wx,y*wy,z*wz);
+	}
+}
+
+void setW(float w, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].setW(w*wx);
+	}
+}
+
+void resetW(float w, float start, float num) {
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].resetW(w*wx);
+	}
+}
+
+void ring(float x, float y, float z, float ax, float ay, float az, float d, float start, float num) {
+	float k = 0;
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].p.P.set(x*wx,y*wy,z*wz);
+		ar[i].r.P.set(0,0,d*wx);
+		ar[i].rang.P.set(ax,ay+k/num/arm*2*PI,az);
+		k ++;
+	}
+}
+
+void spray(float x, float y, float z, float ax, float ay, float az, float d, float spread, float start, float num) {
+	float k = 0;
+	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+		ar[i].p.P.set(x*wx,y*wy,z*wz);
+		ar[i].r.P.set(0,0,random(d*wx));
+		ar[i].rang.P.set(ax+PI/2+random(-spread,spread),ay+random(-spread,spread),az);
+		k ++;
 	}
 }
 
