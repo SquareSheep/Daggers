@@ -31,7 +31,7 @@ char keyR;
 char keyP;
 
 void setup() {
-  size(1000,1000,P3D);
+  size(1050,1050,P3D);
   de = (int)(width*0.5+height*0.5);
   front = new PVector(de*2,de,de*0.2);
   back = new PVector(-de*2,-de,-de*2);
@@ -89,7 +89,7 @@ void update() {
   updateEvents();
 
   for (Entity mob : mobs) {
-    mob.update();
+    if (mob.draw) mob.update();
   }
   for (int i = 0 ; i < mobs.size() ; i ++) {
     if (mobs.get(i).finished) mobs.remove(i);

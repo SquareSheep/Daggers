@@ -1,64 +1,95 @@
-void setAng(float x, float y, float z, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setFillStyle(Blade[] ar, float r, float g, float b, float a, float rr, float gr, float br, float aa, float rm, float gm, float bm, float am, float rmr, float gmr, float bmr, float amr) {
+	float t;
+	for (int i = 0 ; i < ar.length ; i ++) {
+		t = (float)i/ar.length-0.5;
+		ar[i].fillStyle.setC(r+rr*t,g+gr*t,b+br*t,a+aa*t);
+		ar[i].fillStyle.setM(rm+rmr*t,gm+gmr*t,bm+bmr*t,am+amr*t);
+	}
+}
+
+void setAng(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].ang.P.set(x,y,z);
 	}
 }
 
-void setAV(float x, float y, float z, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setAv(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].av.P.set(x,y,z);
 	}
 }
 
-void setRang(float x, float y, float z, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setRang(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].rang.P.set(x,y,z);
 	}
 }
 
-void setRangV(float x, float y, float z, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setRangV(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].rangV.P.set(x,y,z);
 	}
 }
 
-void setR(float x, float y, float z, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setP(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.P.set(x*wx,y*wy,z*wz);
+	}
+}
+
+void setPv(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].pv.P.set(x*wx,y*wy,z*wz);
+	}
+}
+
+void setR(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].r.P.set(x*wx,y*wy,z*wz);
 	}
 }
 
-void setRv(float x, float y, float z, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setRv(Blade[] ar, float x, float y, float z, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].rv.P.set(x*wx,y*wy,z*wz);
 	}
 }
 
-void setW(float w, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void setW(Blade[] ar, float w, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].setW(w*wx);
 	}
 }
 
-void resetW(float w, float start, float num) {
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+void resetW(Blade[] ar, float w, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].resetW(w*wx);
 	}
 }
 
-void ring(float x, float y, float z, float ax, float ay, float az, float d, float start, float num) {
+void scatter(Blade[] ar, float d, float start, float num) {
 	float k = 0;
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
-		ar[i].p.P.set(x*wx,y*wy,z*wz);
-		ar[i].r.P.set(0,0,d*wx);
-		ar[i].rang.P.set(ax,ay+k/num/arm*2*PI,az);
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.P.set(random(-wx,wx),random(-wy,wy),random(-wz,wz));
+		ar[i].r.reset(0,0,0, 0,0,random(0,d*wx));
+		ar[i].rang.reset(random(-PI,PI),random(-PI,PI),0);
 		k ++;
 	}
 }
 
-void spray(float x, float y, float z, float ax, float ay, float az, float d, float spread, float start, float num) {
+void ring(Blade[] ar, float x, float y, float z, float ax, float ay, float az, float d, float start, float num) {
 	float k = 0;
-	for (int i = (int)(start*arm) ; i < min((start+num)*arm,arm) ; i ++) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.P.set(x*wx,y*wy,z*wz);
+		ar[i].r.P.set(0,0,d*wx);
+		ar[i].rang.P.set(ax,ay+k/num/ar.length*2*PI,az);
+		k ++;
+	}
+}
+
+void spray(Blade[] ar, float x, float y, float z, float ax, float ay, float az, float d, float spread, float start, float num) {
+	float k = 0;
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].p.P.set(x*wx,y*wy,z*wz);
 		ar[i].r.P.set(0,0,random(d*wx));
 		ar[i].rang.P.set(ax+PI/2+random(-spread,spread),ay+random(-spread,spread),az);
