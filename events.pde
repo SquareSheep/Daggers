@@ -7,6 +7,16 @@ void setFillStyle(Blade[] ar, float r, float g, float b, float a, float rr, floa
 	}
 }
 
+void setRangVRange(Blade[] ar, float x, float y, float z, float xr, float yr, float zr, float start, float num) {
+	float t;
+	float k = 0;
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		t = k/num/ar.length-0.5;
+		ar[i].rangV.P.set(x+xr*t,y+yr*t,z+zr*t);
+		k ++;
+	}
+}
+
 void setAng(Blade[] ar, float x, float y, float z, float start, float num) {
 	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
 		ar[i].ang.P.set(x,y,z);
@@ -73,6 +83,26 @@ void scatter(Blade[] ar, float d, float start, float num) {
 		ar[i].p.P.set(random(-wx,wx),random(-wy,wy),random(-wz,wz));
 		ar[i].r.reset(0,0,0, 0,0,random(0,d*wx));
 		ar[i].rang.reset(random(-PI,PI),random(-PI,PI),0);
+		k ++;
+	}
+}
+
+void helix(Blade[] ar, float x, float y, float z, float ax, float ay, float az, float w, float d, float count, float start, float num) {
+	float k = 0;
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.P.set(x*wx,y*wy,z*wz);
+		ar[i].r.P.set(0,k/(ar.length*num)*d*wx,w*wx);
+		ar[i].rang.P.set(ax,ay+k/num/ar.length*2*PI*count,az);
+		k ++;
+	}
+}
+
+void spiral(Blade[] ar, float x, float y, float z, float ax, float ay, float az, float w, float d, float count, float start, float num) {
+	float k = 0;
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.P.set(x*wx,y*wy,z*wz);
+		ar[i].r.P.set(k/num/ar.length*d*wx,0,w*wx);
+		ar[i].rang.P.set(ax,ay+k/num/ar.length*2*PI*count,az);
 		k ++;
 	}
 }

@@ -42,7 +42,7 @@ bass456,464,
 
 // Temp computation variables
 int backFlash = 125;
-float t;
+float t,num;
 
 void addEvents() {
 
@@ -51,8 +51,10 @@ void addEvents() {
 void instantEvents() {
 	switch(currBeat) {
 		case 0:
-		for (int i = 0 ; i < 10 ; i ++) {
-			ring(ar,0,i*0.1-0.5,0, 0,0,0, 0.5, 0.1*i,0.1);
+		num = 1;
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			helix(ar,0,0,0, -PI/2,0,0, 0.05,0.7,10, t,1/num);
 		}
 		break;
 		case 14: // Lyrics start
@@ -63,104 +65,102 @@ void instantEvents() {
 
 
 		case 80: // Piano chords
-		scatter(ar2,0.3, 0,1);
-		setAv(ar2,0,0,0.01, 0,1);
-		setRv(ar2,0,0,0.003, 0,1);
+		//Camera
 		cam.reset();
-		cam.pv.P.set(0,0,1);
-		setFillStyle(ar,155,155,155,255,55,55,55,0, 3,3,3,0, 0,0,0,0);
-		ring(ar,0,0,0, -PI/2,0,0, 0.7, 0,1);
-		for (int i = 0 ; i < arm*1 ; i ++) {
-			ar[i].rangV.P.set(0.03*i/arm,0.01,0);
+		cam.av.P.set(0.003,0.006,0);
+		//Primary structure
+		num = 3;
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			ring(ar,0,0,0, -PI/2-t*2,3,t*2, 0.3+t*0.2, t,1/num);
 		}
-		break;
-		case 88:
-		cam.pv.P.set(0,0,-1);
-		cam.av.P.set(0,0,0.002);
-		setFillStyle(ar,125,125,125,255, 125,0,-55,0, 6,3,3,0, 0,0,0,0);
-		setRv(ar,0,0,0.006, 0,1);
-		for (int i = 0 ; i < arm*1 ; i ++) {
-			ar[i].r.P.set(0,random(-0.1*wx,0.1*wx),0);
-			if (random(1) > 0.3) {
-				ar[i].r.P.z += random(0.3*wx);
-			}
-		}
-		break;
-		case 96:
-		scatter(ar2,0.3, 0,1);
-		setAv(ar2,0,0,0.02, 0,1);
-		setRv(ar2,0,0,0.004, 0,1);
-		cam.reset();
-		setAng(ar,-PI,0,0, 0,1);
-		setFillStyle(ar,255,125,125,255, 125,-100,55,0, 3,3,3,0, 0,0,0,0);
-		setRv(ar,0,0,-0.006, 0,1);
-		for (int i = 0 ; i < arm*1 ; i ++) {
-			ar[i].rangV.P.set(-0.03*i/arm,0.01,0);
-		}
-		ring(ar,0,0,-0.45, -PI/2,0,0, 1, 0,0.25);
-		ring(ar,0,0,-0.15, -PI/2,0,0, 1, 0.25,0.25);
-		ring(ar,0,0,0.15, -PI/2,0,0, 1, 0.5,0.25);
-		ring(ar,0,0,0.45, -PI/2,0,0, 1, 0.75,0.25);
-		break;
-		case 112:
-		scatter(ar2,0.3, 0,1);
-		setAv(ar2,0,0,0.02, 0,1);
-		setRv(ar2,0,0,0.004, 0,1);
-		cam.av.P.set(0,0,-0.001);
-		setRv(ar,0,0,0, 0,1);
-		for (int i = 0 ; i < arm*1 ; i ++) {
-			ar[i].rangV.P.set(0.03*i/arm,-0.01,0);
-		}
-		ring(ar,0,0,0, -PI/2,0,0, 1, 0,1);
-		break;
-		case 120:
-		cam.av.P.set(0,0,0.0003);
-		ring(ar,0,0,-0.25, -PI/2,0,0, 1, 0,0.5);
-		for (int i = 0 ; i < arm*1 ; i ++) {
-			ar[i].rangV.P.set(-0.03*i/arm,-0.01,0);
-		}
-		ring(ar,0,0, 0.25, -PI/2,0,0, 1, 0.5,0.5);
-		break;
-		case 128:
-		for (int i = 0 ; i < arm ; i ++) {
-			if (random(1) > 0.5) {
-				ar[i].r.P.z -= 0.3*wx;
-			}
+		// Modifications
+		setFillStyle(ar, 125,125,125,255, 100,100,100,0, 0.2,0.2,0.2,0, 0,0,0,0);
+		setAv(ar,0,0,0.01, 0,1);
+		setRv(ar, 0,0,0.01, 0,1);
+		for (int i = 0 ; i < ar.length ; i ++) {
+			ar[i].rv.pm.set(0,0,0.0003*wx);
+			ar[i].r.pm.set(0,0,0.001*wx);
 		}
 		break;
 
+		case 88:
+		scatter(ar,1, 0,1);
+		break;
+
+		case 96: //"..blame all the others"
+		num = 8;
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			ring(ar,0,0,0, -PI/2+t*PI,0,t*PI, t, t,1/num);
+		}
+		setAv(ar,0,0,-0.01, 0,1);
+		setRv(ar, 0,0,-0.01, 0,1);
+		for (int i = 0 ; i < ar.length ; i ++) ar[i].rv.pm.set(0,0,0);
+		break;
+
+		case 112:
+		num = 6;
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			setR(ar, 0,0,(1-t)*0.9, t,1/num);
+			setRangV(ar, t*0.011-(i%2)*0.01,(i%2)*0.02-0.01,t*0.01, t,1/num);
+		}
+		setFillStyle(ar, 55,55,155,255, -55,55,25,0, 0.8,0.2,0.2,0, 0,0,0,0);
+		setRv(ar, 0,0,0, 0,1);
+		break;
+
+		case 120: //"blood on your hands"
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			setR(ar, 0,0,t*0.8+0.1, t,1/num);
+			setRangV(ar, t*0.015-(i%2)*0.03,-(i%2)*0.02+0.01,-t*0.01, t,1/num);
+		}
+		setFillStyle(ar, 255,55,55,255, 0,25,25,0, 0.8,0.2,0.2,0, 0,0,0,0);
+		break;
+
+		case 128:
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			setR(ar, 0,0,(1-t)*0.8+0.1, t,1/num);
+			setRangV(ar, t*0.015-(i%2)*0.03,-(i%2)*0.02+0.01,-t*0.01, t,1/num);
+		}
+		setFillStyle(ar, 200,100,100,255, -55,100,100,0, 0.8,0.2,0.2,0, 0,0,0,0);
+		break;
+
 		case 144: // "time"
-		ring(ar2,0,0,0, 0,0,0, 0.5, 0,1);
-		setRv(ar2,0,0,0, 0,1);
-		for (int i = 0 ; i < ar2.length ; i ++) {
-			ar2[i].rangV.P.set(-0.01*i/arm,0,0.01);
-		}
 		cam.reset();
-		cam.pv.P.set(0,0,2);
-		backFill.x += 100;
-		for (int i = 0 ; i < 5 ; i ++) {
-			ring(ar,0,0,-i*0.1+0.5, -PI/2,0,0, 0.6, 0.1*i,0.1);
-			setRangV(ar,0,0.01-(i%2)*0.02,0, 0.1*i,0.1);
+		cam.av.P.set(-0.001,-0.01,0.003);
+
+		for (float i = 0 ; i < num ; i ++) {
+			t = i/num;
+			helix(ar, 0,0,0, -PI/2,t*2*PI,0, 0.4,0.8,3, t,1/num);
 		}
+
+		for (int i = 0 ; i < ar.length ; i ++) {
+			ar[i].rangV.P.add(0.02*(float)i/ar.length,0,0);
+		}
+		setFillStyle(ar, 65,65,65,255, 55,-55,55,0, 0.5,0.5,0.5,0, 0,0,0,0);
 		break;
+
 		case 160: // "spine"
-		cam.reset();
-		cam.pv.P.set(0,0,1);
-		cam.av.P.set(0,0.01,0);
-		backFill.x += 100;
-		for (int i = 0 ; i < 20 ; i ++) {
-			ring(ar,0,0,-i*0.05+0.5, -PI/2,0,0, 0.4, 0.05*i,0.05);
-			setRangV(ar,0,0.015-(i%2)*0.03,0, 0.1*i,0.1);
+		for (int i = 0 ; i < ar.length ; i ++) {
+			t = i/num;
+			setR(ar, 0,0,t*0.68+0.3, t,1/num);
+			ar[i].rangV.P.add(0.04*(float)i/ar.length-0.02,0,0);
 		}
+		setFillStyle(ar, 255,55,55,255, 0,55,-55,0, 1,0.2,0.2,0, 0,0,0,0);
 		break;
+
 		case 176: // "time"
 		cam.reset();
-		cam.pv.P.set(0,0,2);
-		backFill.x += 100;
-		for (int i = 0 ; i < 10 ; i ++) {
-			ring(ar,0,i*0.1-0.5,0, 0,0,0, 0.5, 0.1*i,0.1);
-			setRangV(ar,0,0.015-(i%2)*0.03,0, 0.1*i,0.1);
+		cam.av.P.set(0.001,0.015,-0.006);
+		for (int i = 0 ; i < ar.length ; i ++) {
+			t = i/num;
+			setR(ar, 0,0,0.99-t*0.68, t,1/num);
+			ar[i].rangV.P.add(0.04*(float)i/ar.length-0.02,0,0);
 		}
+		setFillStyle(ar, 125,125,125,255, 255,-155,-155,0, 0.6,0.4,0.4,0, 0,0,0,0);
 		break;
 
 		case 208: // Drop and bass effects

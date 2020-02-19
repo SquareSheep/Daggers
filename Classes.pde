@@ -526,6 +526,9 @@ class Camera {
     pv.reset(0,0,0);
     ang.P.set(dang);
     av.reset(0,0,0);
+    ang.p.x %= 2*PI;
+    ang.p.y %= 2*PI;
+    ang.p.z %= 2*PI;
   }
 
   void update() {

@@ -28,20 +28,24 @@ class Blade extends Mob {
 		rv.update();
 		rangV.update();
 		fillStyle.update();
+		sca.x += r.p.z/wx*0.5;
 	}
 
 	void stab(float x, float y, float z, float ang1, float ang2, float d) {
 		rang.reset(ang1, ang2, rang.P.z);
 		p.reset(x,y,z);
 		r.reset(0,0,0, 0,0,d);
-		r.v.z += d*0.4;
+		r.v.z += d*0.2;
 	}
 
 	void setIndex(float i) {
+		i %= binCount;
 		fillStyle.index = (int)i;
 		w.index = (int)i;
 		p.index = (int)i;
+		pv.index = (int)i;
 		ang.index = (int)i;
+		av.index = (int)i;
 		rangV.index = (int)i;
 		rv.index = (int)i;
 		r.index = (int)i;
