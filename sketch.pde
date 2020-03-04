@@ -10,7 +10,7 @@ static float fillVMult = 0.5;
 static float fftThreshold = 1.2;
 static float fftPow = 2;
 static float fftAmp = 1.5;
-static float volumeGain = -10;
+static float volumeGain = -9;
 static String songName = "../Music/daggers.mp3";
 
 IColor defaultFill = new IColor(222,125,222,255);
@@ -22,46 +22,53 @@ SpringValue backFill = new SpringValue(0);
 boolean boundaryLoop = true;
 boolean boundaryLoopRUpper = true;
 boolean boundaryLoopRLower = true;
-float wx,wy,wz; // Width, height, depth of animation [front-back];
-float arm = ar.length;
-float borderAmp = 0.5;
+
+// Size and boundary variables
+float wx,wy,wz; // Spherical size of animation
+float bx,by,bz; // Boundary width of animation
 
 void boundaryCheck(Mob mob) {
-	if (mob.p.p.x < back.x) {
-		mob.p.p.x = front.x;
-		mob.p.P.x = front.x;
-	} else if (mob.p.p.x > front.x) {
-		mob.p.p.x = back.x;
-		mob.p.P.x = back.x;
+	if (mob.p.p.x < -bx) {
+		mob.p.p.x = bx;
+		mob.p.P.x = bx;
+		mob.sca.x = 0;
+	} else if (mob.p.p.x > bx) {
+		mob.p.p.x = -bx;
+		mob.p.P.x = -bx;
+		mob.sca.x = 0;
 	}
-	if (mob.p.p.y < back.y) {
-		mob.p.p.y = front.y;
-		mob.p.P.y = front.y;
-	} else if (mob.p.p.y > front.y) {
-		mob.p.p.y = back.y;
-		mob.p.P.y = back.y;
+	if (mob.p.p.y < -by) {
+		mob.p.p.y = by;
+		mob.p.P.y = by;
+		mob.sca.x = 0;
+	} else if (mob.p.p.y > by) {
+		mob.p.p.y = -by;
+		mob.p.P.y = -by;
+		mob.sca.x = 0;
 	}
-	if (mob.p.p.z < back.z) {
-		mob.p.p.z = front.z;
-		mob.p.P.z = front.z;
-	} else if (mob.p.p.z > front.z) {
-		mob.p.p.z = back.z;
-		mob.p.P.z = back.z;
+	if (mob.p.p.z < -bz) {
+		mob.p.p.z = bz;
+		mob.p.P.z = bz;
+		mob.sca.x = 0;
+	} else if (mob.p.p.z > bz) {
+		mob.p.p.z = -bz;
+		mob.p.P.z = -bz;
+		mob.sca.x = 0;
 	}
 }
 
 void boundaryCheckRUpper(Mob mob) {
-	if (mob.r.p.x > wx) {
+	if (mob.r.p.x > bx) {
 		mob.r.P.x = 0;
 		mob.r.p.x = 0;
 		mob.sca.x = 0;
 	}
-	if (mob.r.p.y > wy) {
+	if (mob.r.p.y > by) {
 		mob.r.P.y = 0;
 		mob.r.p.y = 0;
 		mob.sca.x = 0;
 	}
-	if (mob.r.p.z > wz) {
+	if (mob.r.p.z > bz) {
 		mob.r.P.z = 0;
 		mob.r.p.z = 0;
 		mob.sca.x = 0;
@@ -70,18 +77,18 @@ void boundaryCheckRUpper(Mob mob) {
 
 void boundaryCheckRLower(Mob mob) {
 	if (mob.r.p.x < 0) {
-		mob.r.P.x = wx;
-		mob.r.p.x = wy;
+		mob.r.P.x = bx;
+		mob.r.p.x = by;
 		mob.sca.x = 0;
 	}
 	if (mob.r.p.y < 0) {
-		mob.r.P.y = wx;
-		mob.r.p.y = wy;
+		mob.r.P.y = bx;
+		mob.r.p.y = by;
 		mob.sca.x = 0;
 	}
 	if (mob.r.p.z < 0) {
-		mob.r.P.z = wx;
-		mob.r.p.z = wy;
+		mob.r.P.z = bx;
+		mob.r.p.z = by;
 		mob.sca.x = 0;
 	}
 }
@@ -115,25 +122,26 @@ void render() {
 	backFill.update();
 	stroke(backFill.x);
 
-	if (timer.beat) println(song.position() + "," + (int)(currBeat));
 	if (timer.beat) {
-		if (currBeat % 2 == 0) {
-			for (int i = 0 ; i < ar.length ; i ++) {
-				ar[i].r.v.z += 25;
-			}
-		}
+		println(song.position() + "," + (int)(currBeat));
 		instantEvents();
 	}
+}
+
+void setWX(float x) {
+	wx = x;
 }
 
 void setSketch() {
 	front = new PVector(de,de,de);
 	back = new PVector(-de,-de,-de);
-	front.mult(0.5);
-	back.mult(0.5);
-	wx = front.x - back.x;
-	wy = front.y - back.y;
-	wz = front.z - back.z;
+
+	wx = de*2;
+	wy = de*2;
+	wz = de*2;
+	bx = wx;
+	by = wy;
+	bz = wz;
 
 	float tick;
 	for (int i = 0 ; i < ar.length ; i ++) {

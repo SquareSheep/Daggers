@@ -77,6 +77,76 @@ void resetW(Blade[] ar, float w, float start, float num) {
 	}
 }
 
+void setMass(Blade[] ar, float mass, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.mass = mass; ar[i].pv.mass = mass; ar[i].ang.mass = mass; ar[i].av.mass = mass;
+		ar[i].r.mass = mass; ar[i].rang.mass = mass; ar[i].rangV.mass = mass; ar[i].rv.mass = mass;
+	} 
+}
+
+void setVMult(Blade[] ar, float vMult, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.vMult = vMult; ar[i].pv.vMult = vMult; ar[i].ang.vMult = vMult; ar[i].av.vMult = vMult; ar[i].r.vMult = vMult; 
+		ar[i].rang.vMult = vMult; ar[i].rangV.vMult = vMult; ar[i].rv.vMult = vMult;
+	}
+}
+
+void setDraw(Blade[] ar, boolean draw, float start, float num) {
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].draw = draw;
+	}
+}
+void polarizeRandom(Blade[] ar, float ax, float ay, float az, float r, float start, float num) {
+	r *= wx;
+	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
+		ar[i].p.P.set(random(-r,r),random(-r,r),random(-r,r));
+		ar[i].r.P.set(0,0,0);
+		ar[i].ang.P.set(ax,ay,az);
+		ar[i].rang.P.set(0,0,0);
+	}
+}
+
+class Shake extends BladeEvent {
+	float amp;
+
+	Shake(float time, float timeEnd, Blade[] ar, float amp, float start, float num) {
+		super(time,timeEnd, ar, start, num);
+		this.amp = amp*wx;
+	}
+
+	void update() {
+		for (int i = 0 ; i < ar.length ; i ++) {
+			ar[i].p.v.add(random(-amp,amp),random(-amp,amp),random(-amp,amp));
+		}
+	}
+}
+
+class Spray extends BladeEvent {
+	float x,y,z,ax,ay,az,angAmp,d;
+
+	Spray(float time, float timeEnd, Blade[] ar, float x, float y, float z, float ax, float ay, float az, float angAmp, float d, float start, float num) {
+		super(time, timeEnd, ar, start, num);
+		this.x = x; this.y = y; this.z = z; this.ax = ax; this.ay = ay; this.az = az; this.angAmp = angAmp; this.d = d*wx;
+	}
+
+	void spawn() {
+		for (int i = 0 ; i < ar.length ; i ++) {
+			ar[i].p.reset(x,y,z);
+			ar[i].ang.reset(0,0,0);
+			ar[i].rang.reset(ax+random(-angAmp,angAmp),ay+random(-angAmp,angAmp),az);
+			ar[i].r.p.set(0,0,0);
+			ar[i].r.P.set(0,0,random(d));
+			ar[i].w.P.mult((d-ar[i].r.P.z)/d);
+		}
+	}
+
+	void update() {
+		for (int i = 0 ; i < ar.length ; i ++) {
+			ar[i].p.v.add(random(-25,25),random(-25,25),random(-25,25));
+		}
+	}
+}
+
 void scatter(Blade[] ar, float d, float start, float num) {
 	float k = 0;
 	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
@@ -90,8 +160,8 @@ void scatter(Blade[] ar, float d, float start, float num) {
 void helix(Blade[] ar, float x, float y, float z, float ax, float ay, float az, float w, float d, float count, float start, float num) {
 	float k = 0;
 	for (int i = (int)(start*ar.length) ; i < min((start+num)*ar.length,ar.length) ; i ++) {
-		ar[i].p.P.set(x*wx,y*wy,z*wz);
-		ar[i].r.P.set(0,k/(ar.length*num)*d*wx,w*wx);
+		ar[i].p.P.set(x*wx,y*wy,z*wz+(k/(ar.length*num)-0.5)*d*wx);
+		ar[i].r.P.set(0,0,w*wx);
 		ar[i].rang.P.set(ax,ay+k/num/ar.length*2*PI*count,az);
 		k ++;
 	}
@@ -124,6 +194,20 @@ void spray(Blade[] ar, float x, float y, float z, float ax, float ay, float az, 
 		ar[i].r.P.set(0,0,random(d*wx));
 		ar[i].rang.P.set(ax+PI/2+random(-spread,spread),ay+random(-spread,spread),az);
 		k ++;
+	}
+}
+
+abstract class BladeEvent extends Event {
+	Blade[] ar;
+
+	BladeEvent(float time, float timeEnd, Blade[] ar, float start, float num) {
+		super(time,timeEnd);
+		this.ar = new Blade[(int)(ar.length*num)];
+		int k = 0;
+		for (int i = (int)(ar.length*start) ; i < ar.length*(start+num) ; i ++) {
+			this.ar[k] = ar[i];
+			k ++;
+		}
 	}
 }
 
